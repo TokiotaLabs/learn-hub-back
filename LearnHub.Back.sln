@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35027.167
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github", "github", "{6256A47F-9D25-4AFB-BE8C-1011413366A7}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github", "github", "{F6DB88D3-334B-4587-B6FD-C991AFB814AB}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "prompts", "prompts", "{D3E4798C-0857-46C7-AE18-74077097ED5D}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "prompts", "prompts", "{DB4E8898-B32F-42DB-9031-A58779C54D7C}"
 	ProjectSection(SolutionItems) = preProject
 		..\..\..\Users\ÁlvaroRollínGuerro\Desktop\folder_structure.md = ..\..\..\Users\ÁlvaroRollínGuerro\Desktop\folder_structure.md
 	EndProjectSection
@@ -15,7 +15,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{D3E4798C-0857-46C7-AE18-74077097ED5D} = {6256A47F-9D25-4AFB-BE8C-1011413366A7}
+		{DB4E8898-B32F-42DB-9031-A58779C54D7C} = {F6DB88D3-334B-4587-B6FD-C991AFB814AB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EB193630-F8C7-439A-845B-5B88B740148E}
