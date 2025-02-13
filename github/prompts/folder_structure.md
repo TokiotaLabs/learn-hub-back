@@ -37,3 +37,44 @@ Para crear esta estructura de carpetas, simplemente usa el siguiente comando en 
 ```
 mkdir -p src/Api src/Application src/Domain src/Host src/Infrastructure src/Tests
 ```
+
+SOLO cuando ya hayas creado la estructura de carpetas anterior, quiero que crees un proyecto en las siguientes carpetas:
+
+src/Api
+Usa el siguiente comando en la terminal:
+```
+dotnet new classlib -n LearnHub.Back.Api
+```
+
+src/Application
+Usa el siguiente comando en la terminal:
+```
+dotnet new classlib -n LearnHub.Back.Application
+```
+
+src/Domain
+Usa el siguiente comando en la terminal:
+```
+dotnet new classlib -n LearnHub.Back.Domain
+```
+
+src/Host
+Usa el siguiente comando en la terminal:
+```
+dotnet new webapp -n LearnHub.Back.Host
+dotnet sln add LearnHub.Back.Host
+```
+
+src/Infrastructure
+Usa el siguiente comando en la terminal:
+```
+dotnet new classlib -n LearnHub.Back.Infrastructure
+```
+
+src/Tests
+Usa el siguiente comando en la terminal:
+```
+dotnet new nunit -n LearnHub.Back.Tests
+dotnet sln add LearnHub.Back.Tests
+dotnet add reference ../LearnHub.Back/LearnHub.Back.csproj
+```
