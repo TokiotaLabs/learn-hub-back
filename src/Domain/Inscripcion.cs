@@ -9,7 +9,7 @@ public class Inscripcion
     public Curso Curso { get; set; }
     public DateTime FechaInscripcion { get; set; }
     public string Estado { get; set; } // Aprobada, Rechazada, Pendiente
-
+    public string PreferenciaHorario { get; set; }
     public Guid PagoId { get; set; }
     public Pago Pago { get; set; }
 }
