@@ -1,10 +1,10 @@
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using LearnHub.Back.Api.Middleware;
 using LearnHub.Back.Application.Handlers.Curso;
 using LearnHub.Back.Infrastructure;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 
@@ -14,27 +14,22 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 builder.Services.AddControllers()
-    .AddFluentValidation(fv =>
-    {
-        fv.RegisterValidatorsFromAssemblyContaining<CreateCursoCommandValidator>();
-        fv.ImplicitlyValidateChildProperties = true;
-        fv.AutomaticValidationEnabled = true;
-    })
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
     });
 
+//FluentValidation configuration
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssembly(typeof(CreateCursoCommandValidator).Assembly);
 
-
-
-
-builder.Services.AddSingleton<IMediator, Mediator>();
-
-
-
-
+// MediatR configuration
+builder.Services.AddMediatR(cfg => {
+    cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
+});
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
