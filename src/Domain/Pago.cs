@@ -6,6 +6,9 @@ public class Pago
     public Guid InscripcionId { get; set; }
     public Inscripcion Inscripcion { get; set; }
     public string MetodoPago { get; set; } // Tarjeta de crédito, PayPal, etc.
-    public decimal Monto { get; set; }
+    public string NumeroTarjeta { get; set; }
+    public DateTime FechaVencimientoTarjeta { get; set; }
+    public string CVV { get; set; }
+    public decimal CantidadPago { get; set; }
     public DateTime FechaPago { get; set; }
 }
