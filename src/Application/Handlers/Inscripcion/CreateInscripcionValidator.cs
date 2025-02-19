@@ -6,7 +6,6 @@ namespace LearnHub.Back.Application.Handlers.Inscripcion
     {
         public CreateInscripcionValidator()
         {
-            RuleFor(x => x.Nombre).NotEmpty().WithMessage("El nombre es obligatorio.");
             // Agregar más reglas de validación según sea necesario
         }
     }

@@ -5,7 +5,8 @@ namespace LearnHub.Back.Application.Handlers.Inscripcion
     public class UpdateInscripcionCommand : IRequest<Unit>
     {
         public Guid Id { get; set; }
-        public string Nombre { get; set; }
-        // Agregar más propiedades según sea necesario
+        public string Estado { get; set; }
+        public string PreferenciaHorario { get; set; }
+        public Guid? PagoId { get; set; }
     }
 }
