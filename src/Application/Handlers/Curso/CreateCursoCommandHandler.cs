@@ -18,10 +18,19 @@ namespace LearnHub.Back.Application.Handlers.Curso
 
         public async Task<CursoDto> Handle(CreateCursoCommand request, CancellationToken cancellationToken)
         {
-            var curso = _mapper.Map<Domain.Curso>(request);
-            _context.Cursos.Add(curso);
-            await _context.SaveChangesAsync(cancellationToken);
-            return _mapper.Map<CursoDto>(curso);
+            //var curso = _mapper.Map<Domain.Curso>(request);
+            //_context.Cursos.Add(curso);
+            //await _context.SaveChangesAsync(cancellationToken);
+            //return _mapper.Map<CursoDto>(curso);
+
+            return new CursoDto()
+            {
+                Id = Guid.NewGuid(),
+                Nombre = request.Nombre,
+                Descripcion = request.Descripcion,
+                FechaInicio = request.FechaInicio,
+                FechaFin = request.FechaFin
+            };
         }
     }
 }

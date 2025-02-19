@@ -17,9 +17,9 @@ namespace LearnHub.Back.Application.Handlers.Curso
 
         public async Task<Unit> Handle(UpdateCursoCommand request, CancellationToken cancellationToken)
         {
-            var curso = await _context.Cursos.FindAsync(new object[] { request.Id }, cancellationToken);
-            _mapper.Map(request, curso);
-            await _context.SaveChangesAsync(cancellationToken);
+            //var curso = await _context.Cursos.FindAsync(new object[] { request.Id }, cancellationToken);
+            //_mapper.Map(request, curso);
+            //await _context.SaveChangesAsync(cancellationToken);
             return Unit.Value;
         }
     }

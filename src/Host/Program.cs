@@ -3,7 +3,6 @@ using FluentValidation.AspNetCore;
 using LearnHub.Back.Api.Middleware;
 using LearnHub.Back.Application.Handlers.Curso;
 using LearnHub.Back.Infrastructure;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
@@ -27,7 +26,8 @@ builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssembly(typeof(CreateCursoCommandValidator).Assembly);
 
 // MediatR configuration
-builder.Services.AddMediatR(cfg => {
+builder.Services.AddMediatR(cfg =>
+{
     cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
 });
 
