@@ -2,9 +2,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Api\LearnHub.Back.Api.csproj" />
-    <ProjectReference Include="..\Application\LearnHub.Back.Application.csproj" />
-    <ProjectReference Include="..\Domain\LearnHub.Back.Domain.csproj" />
-    <ProjectReference Include="..\Infrastructure\LearnHub.Back.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,8 +1,7 @@
-using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using LearnHub.Back.Application.Handlers.Alumno;
 using LearnHub.Back.Application.DTOs;
+using LearnHub.Back.Application.Handlers.Alumno;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LearnHub.Back.Api.Controllers
 {
@@ -25,7 +24,7 @@ namespace LearnHub.Back.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<AlumnoDto>> GetById(int id)
+        public async Task<ActionResult<AlumnoDto>> GetById(Guid id)
         {
             var result = await _mediator.Send(new GetAlumnoByIdQuery { Id = id });
             return Ok(result);
@@ -39,7 +38,7 @@ namespace LearnHub.Back.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> Update(int id, UpdateAlumnoCommand command)
+        public async Task<ActionResult> Update(Guid id, UpdateAlumnoCommand command)
         {
             if (id != command.Id)
             {
@@ -51,7 +50,7 @@ namespace LearnHub.Back.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult> Delete(Guid id)
         {
             await _mediator.Send(new DeleteAlumnoCommand { Id = id });
             return NoContent();

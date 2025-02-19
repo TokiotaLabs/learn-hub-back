@@ -1,12 +1,11 @@
-using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
+using AutoMapper;
 using LearnHub.Back.Infrastructure;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace LearnHub.Back.Application.Handlers.Inscripcion
 {
-    public class UpdateInscripcionHandler : IRequestHandler<UpdateInscripcionCommand>
+    public class UpdateInscripcionHandler : IRequestHandler<UpdateInscripcionCommand, Unit>
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;

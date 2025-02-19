@@ -1,14 +1,9 @@
-using MediatR;
-using LearnHub.Back.Application.DTOs;
-using LearnHub.Back.Domain;
 using LearnHub.Back.Infrastructure;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoMapper;
+using MediatR;
 
 namespace LearnHub.Back.Application.Handlers.Curso
 {
-    public class DeleteCursoCommandHandler : IRequestHandler<DeleteCursoCommand>
+    public class DeleteCursoCommandHandler : IRequestHandler<DeleteCursoCommand, Unit>
     {
         private readonly ApplicationDbContext _context;
 

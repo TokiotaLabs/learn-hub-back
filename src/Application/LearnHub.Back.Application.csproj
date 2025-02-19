@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Domain\LearnHub.Back.Domain.csproj" />
+    <ProjectReference Include="..\Infrastructure\LearnHub.Back.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

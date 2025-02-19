@@ -1,5 +1,4 @@
-using System;
-using System.Collections.Generic;
+namespace LearnHub.Back.Domain;
 
 public class Curso
 {
@@ -14,7 +13,7 @@ public class Curso
     public Guid InstructorId { get; set; }
     public Instructor Instructor { get; set; }
     public string Modalidad { get; set; }
-    public string MaterialesIncluidos { get; set; } 
+    public string MaterialesIncluidos { get; set; }
     public string Certificacion { get; set; }
     public int NumeroPlazas { get; set; }
     public string Ubicacion { get; set; }

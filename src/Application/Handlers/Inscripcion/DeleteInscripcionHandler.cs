@@ -1,12 +1,10 @@
-using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
 using LearnHub.Back.Infrastructure;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace LearnHub.Back.Application.Handlers.Inscripcion
 {
-    public class DeleteInscripcionHandler : IRequestHandler<DeleteInscripcionCommand>
+    public class DeleteInscripcionHandler : IRequestHandler<DeleteInscripcionCommand, Unit>
     {
         private readonly ApplicationDbContext _context;
 

@@ -2,7 +2,7 @@ using MediatR;
 
 namespace LearnHub.Back.Application.Handlers.Inscripcion
 {
-    public class UpdateInscripcionCommand : IRequest
+    public class UpdateInscripcionCommand : IRequest<Unit>
     {
         public Guid Id { get; set; }
         public string Nombre { get; set; }

@@ -1,11 +1,8 @@
-using MediatR;
-using LearnHub.Back.Application.DTOs;
-using LearnHub.Back.Domain;
-using LearnHub.Back.Infrastructure;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using AutoMapper;
+using LearnHub.Back.Application.DTOs;
+using LearnHub.Back.Infrastructure;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace LearnHub.Back.Application.Handlers.Curso
 {

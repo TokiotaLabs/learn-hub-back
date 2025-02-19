@@ -1,9 +1,5 @@
-using MediatR;
 using LearnHub.Back.Application.DTOs;
-using LearnHub.Back.Domain;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
+using MediatR;
 
 namespace LearnHub.Back.Application.Handlers.Alumno
 {

@@ -121,7 +121,7 @@ dotnet add src/Api/LearnHub.Back.Api.csproj package Microsoft.AspNetCore.Mvc --v
 
 # Application
 Usa los siguientes comandos en la terminal:
-dotnet add src/Application/LearnHub.Back.Application.csproj reference src/Domain/LearnHub.Back.Domain.csproj
+dotnet add src/Application/LearnHub.Back.Application.csproj reference src/Domain/LearnHub.Back.Domain.csproj src/Infrastructure/LearnHub.Back.Infrastructure.csproj
 dotnet add src/Application/LearnHub.Back.Application.csproj package MediatR --version 12.4.1
 dotnet add src/Application/LearnHub.Back.Application.csproj package FluentValidation --version 10.3.6
 dotnet add src/Application/LearnHub.Back.Application.csproj package FluentValidation.DependencyInjectionExtensions --version 10.3.0
@@ -133,7 +133,7 @@ dotnet add src/Domain/LearnHub.Back.Domain.csproj package Microsoft.EntityFramew
 
 # Host
 Usa los siguientes comandos en la terminal:
-dotnet add src/Host/LearnHub.Back.Host.csproj reference src/Api/LearnHub.Back.Api.csproj src/Application/LearnHub.Back.Application.csproj src/Domain/LearnHub.Back.Domain.csproj src/Infrastructure/LearnHub.Back.Infrastructure.csproj
+dotnet add src/Host/LearnHub.Back.Host.csproj reference src/Api/LearnHub.Back.Api.csproj
 dotnet add src/Host/LearnHub.Back.Host.csproj package Microsoft.AspNetCore.Authentication.JwtBearer --version 8.0.0
 dotnet add src/Host/LearnHub.Back.Host.csproj package Microsoft.AspNetCore.Mvc.NewtonsoftJson --version 8.0.0
 

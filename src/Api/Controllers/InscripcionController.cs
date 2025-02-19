@@ -1,8 +1,7 @@
-using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using LearnHub.Back.Application.Handlers.Inscripcion;
 using LearnHub.Back.Application.DTOs;
+using LearnHub.Back.Application.Handlers.Inscripcion;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LearnHub.Back.Api.Controllers
 {
