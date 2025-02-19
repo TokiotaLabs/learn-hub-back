@@ -1,5 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
+  <ItemGroup>
+    <ProjectReference Include="..\Api\LearnHub.Back.Api.csproj" />
+    <ProjectReference Include="..\Application\LearnHub.Back.Application.csproj" />
+    <ProjectReference Include="..\Domain\LearnHub.Back.Domain.csproj" />
+    <ProjectReference Include="..\Infrastructure\LearnHub.Back.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.0" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>

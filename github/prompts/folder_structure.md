@@ -40,41 +40,111 @@ mkdir -p src/Api src/Application src/Domain src/Host src/Infrastructure src/Test
 
 SOLO cuando ya hayas creado la estructura de carpetas anterior, quiero que crees un proyecto en las siguientes carpetas:
 
-src/Api
+### src/Api
 Usa el siguiente comando en la terminal:
 ```
 dotnet new classlib -n LearnHub.Back.Api
 ```
 
-src/Application
+### src/Application
 Usa el siguiente comando en la terminal:
 ```
 dotnet new classlib -n LearnHub.Back.Application
 ```
 
-src/Domain
+### src/Domain
 Usa el siguiente comando en la terminal:
 ```
 dotnet new classlib -n LearnHub.Back.Domain
 ```
 
-src/Host
+### src/Host
 Usa el siguiente comando en la terminal:
 ```
 dotnet new webapp -n LearnHub.Back.Host
-dotnet sln add LearnHub.Back.Host
+dotnet sln add src/Host/LearnHub.Back.Host.csproj
 ```
 
-src/Infrastructure
+### src/Infrastructure
 Usa el siguiente comando en la terminal:
 ```
 dotnet new classlib -n LearnHub.Back.Infrastructure
 ```
 
-src/Tests
+### src/Tests
 Usa el siguiente comando en la terminal:
 ```
 dotnet new nunit -n LearnHub.Back.Tests
-dotnet sln add LearnHub.Back.Tests
-dotnet add reference ../LearnHub.Back/LearnHub.Back.csproj
+dotnet sln add src/Tests/LearnHub.Back.Tests.csproj
 ```
+
+### Contenido Directory.Build.props
+Usa el siguiente comando en la terminal para crear el archivo `Directory.Build.props` en la raíz del proyecto:
+```powershell
+$propsContent = @"
+<Project>
+  <PropertyGroup>
+    <MicrosoftAspNetCoreAuthenticationJwtBearerVersion>8.0.0</MicrosoftAspNetCoreAuthenticationJwtBearerVersion>
+    <MicrosoftAspNetCoreMvcNewtonsoftJsonVersion>8.0.0</MicrosoftAspNetCoreMvcNewtonsoftJsonVersion>
+    <MicrosoftAspNetCoreMvcVersion>2.3.0</MicrosoftAspNetCoreMvcVersion>
+    <MediatRVersion>12.4.1</MediatRVersion>
+    <MicrosoftEntityFrameworkCoreVersion>9.0.2</MicrosoftEntityFrameworkCoreVersion>
+    <MicrosoftEntityFrameworkCoreSqlServerVersion>9.0.2</MicrosoftEntityFrameworkCoreSqlServerVersion>
+    <MicrosoftEntityFrameworkCoreToolsVersion>9.0.2</MicrosoftEntityFrameworkCoreToolsVersion>
+    <NUnitVersion>4.3.2</NUnitVersion>
+    <MoqVersion>4.20.72</MoqVersion>
+    <FluentValidationVersion>10.3.6</FluentValidationVersion>
+    <FluentValidationDependencyInjectionExtensionsVersion>10.3.0</FluentValidationDependencyInjectionExtensionsVersion>
+    <AutoMapperVersion>10.1.1</AutoMapperVersion>
+  </PropertyGroup>
+</Project>
+"@
+```
+
+### Crear Directory.Build.props
+```powershell
+$propsContent | Out-File -FilePath Directory.Build.props -Encoding utf8
+```
+
+#### Restaurar paquetes
+```sh
+dotnet restore
+```
+
+### Añadir referencias y paquetes
+Usa los siguientes comandos en la terminal para añadir las referencias y paquetes necesarios para cada proyecto:
+
+# Api
+Usa los siguientes comandos en la terminal:
+dotnet add src/Api/LearnHub.Back.Api.csproj reference src/Application/LearnHub.Back.Application.csproj src/Domain/LearnHub.Back.Domain.csproj src/Infrastructure/LearnHub.Back.Infrastructure.csproj
+dotnet add src/Api/LearnHub.Back.Api.csproj package Microsoft.AspNetCore.Mvc --version 2.3.0
+
+# Application
+Usa los siguientes comandos en la terminal:
+dotnet add src/Application/LearnHub.Back.Application.csproj reference src/Domain/LearnHub.Back.Domain.csproj
+dotnet add src/Application/LearnHub.Back.Application.csproj package MediatR --version 12.4.1
+dotnet add src/Application/LearnHub.Back.Application.csproj package FluentValidation --version 10.3.6
+dotnet add src/Application/LearnHub.Back.Application.csproj package FluentValidation.DependencyInjectionExtensions --version 10.3.0
+dotnet add src/Application/LearnHub.Back.Application.csproj package AutoMapper --version 10.1.1
+
+# Domain
+Usa los siguientes comandos en la terminal:
+dotnet add src/Domain/LearnHub.Back.Domain.csproj package Microsoft.EntityFrameworkCore --version 9.0.2
+
+# Host
+Usa los siguientes comandos en la terminal:
+dotnet add src/Host/LearnHub.Back.Host.csproj reference src/Api/LearnHub.Back.Api.csproj src/Application/LearnHub.Back.Application.csproj src/Domain/LearnHub.Back.Domain.csproj src/Infrastructure/LearnHub.Back.Infrastructure.csproj
+dotnet add src/Host/LearnHub.Back.Host.csproj package Microsoft.AspNetCore.Authentication.JwtBearer --version 8.0.0
+dotnet add src/Host/LearnHub.Back.Host.csproj package Microsoft.AspNetCore.Mvc.NewtonsoftJson --version 8.0.0
+
+# Infrastructure
+Usa los siguientes comandos en la terminal:
+dotnet add src/Infrastructure/LearnHub.Back.Infrastructure.csproj reference src/Domain/LearnHub.Back.Domain.csproj
+dotnet add src/Infrastructure/LearnHub.Back.Infrastructure.csproj package Microsoft.EntityFrameworkCore.SqlServer --version 9.0.2
+dotnet add src/Infrastructure/LearnHub.Back.Infrastructure.csproj package Microsoft.EntityFrameworkCore.Tools --version 9.0.2
+
+# Test
+Usa los siguientes comandos en la terminal:
+dotnet add src/Tests/LearnHub.Back.Tests.csproj reference src/Api/LearnHub.Back.Api.csproj src/Application/LearnHub.Back.Application.csproj src/Domain/LearnHub.Back.Domain.csproj src/Infrastructure/LearnHub.Back.Infrastructure.csproj
+dotnet add src/Tests/LearnHub.Back.Tests.csproj package NUnit --version 4.3.2
+dotnet add src/Tests/LearnHub.Back.Tests.csproj package Moq --version 4.20.72
