@@ -10,6 +10,6 @@ public class Enrollment
     public DateTime EnrollmentDate { get; set; }
     public string Status { get; set; } // Approved, Rejected, Pending
     public string SchedulePreference { get; set; }
-    public Guid PaymentId { get; set; }
+    public Guid? PaymentId { get; set; }  // Making nullable since payment might not exist at enrollment time
     public Payment Payment { get; set; }
 }
