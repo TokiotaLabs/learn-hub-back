@@ -1,13 +1,27 @@
+using LearnHub.Back.Infrastructure;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace LearnHub.Back.Application.Handlers.Student
 {
     public class DeleteStudentCommandHandler : IRequestHandler<DeleteStudentCommand, Unit>
     {
-        public Task<Unit> Handle(DeleteStudentCommand request, CancellationToken cancellationToken)
+        private readonly ApplicationDbContext _context;
+
+        public DeleteStudentCommandHandler(ApplicationDbContext context)
         {
-            // Logic to delete a student
-            return Task.FromResult(Unit.Value);
+            _context = context;
+        }
+
+        public async Task<Unit> Handle(DeleteStudentCommand request, CancellationToken cancellationToken)
+        {
+            var student = await _context.Students.FirstOrDefaultAsync(s => s.Id == request.Id, cancellationToken);
+            if (student != null)
+            {
+                _context.Students.Remove(student);
+                await _context.SaveChangesAsync(cancellationToken);
+            }
+            return Unit.Value;
         }
     }
 }

@@ -2,6 +2,7 @@ using AutoMapper;
 using LearnHub.Back.Application.DTOs;
 using LearnHub.Back.Infrastructure;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace LearnHub.Back.Application.Handlers.Course
 {
@@ -18,17 +19,11 @@ namespace LearnHub.Back.Application.Handlers.Course
 
         public async Task<CourseDto> Handle(GetCourseByIdQuery request, CancellationToken cancellationToken)
         {
-            //var course = await _context.Courses.FindAsync(new object[] { request.Id }, cancellationToken);
-            //return _mapper.Map<CourseDto>(course);
-
-            return new CourseDto()
-            {
-                Id = Guid.NewGuid(),
-                Name = "Course 3",
-                Description = "Description of course 3",
-                StartDate = DateTime.UtcNow,
-                EndDate = DateTime.UtcNow.AddMonths(6)
-            };
+            var course = await _context.Courses
+                .Include(c => c.Instructor)
+                .FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken);
+            
+            return _mapper.Map<CourseDto>(course);
         }
     }
 }

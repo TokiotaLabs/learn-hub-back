@@ -19,7 +19,13 @@ namespace LearnHub.Back.Application.Handlers.Enrollment
 
         public async Task<List<EnrollmentDto>> Handle(GetAllEnrollmentsQuery request, CancellationToken cancellationToken)
         {
-            var enrollments = await _context.Enrollments.ToListAsync(cancellationToken);
+            var enrollments = await _context.Enrollments
+                .Include(e => e.Student)
+                .Include(e => e.Course)
+                    .ThenInclude(c => c.Instructor)
+                .Include(e => e.Payment)
+                .ToListAsync(cancellationToken);
+
             return _mapper.Map<List<EnrollmentDto>>(enrollments);
         }
     }

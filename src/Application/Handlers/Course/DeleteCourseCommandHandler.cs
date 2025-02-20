@@ -1,5 +1,6 @@
 using LearnHub.Back.Infrastructure;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace LearnHub.Back.Application.Handlers.Course
 {
@@ -14,9 +15,12 @@ namespace LearnHub.Back.Application.Handlers.Course
 
         public async Task<Unit> Handle(DeleteCourseCommand request, CancellationToken cancellationToken)
         {
-            //var course = await _context.Courses.FindAsync(new object[] { request.Id }, cancellationToken);
-            //_context.Courses.Remove(course);
-            //await _context.SaveChangesAsync(cancellationToken);
+            var course = await _context.Courses.FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken);
+            if (course != null)
+            {
+                _context.Courses.Remove(course);
+                await _context.SaveChangesAsync(cancellationToken);
+            }
             return Unit.Value;
         }
     }

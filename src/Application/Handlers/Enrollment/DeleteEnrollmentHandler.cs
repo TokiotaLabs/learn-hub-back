@@ -15,9 +15,22 @@ namespace LearnHub.Back.Application.Handlers.Enrollment
 
         public async Task<Unit> Handle(DeleteEnrollmentCommand request, CancellationToken cancellationToken)
         {
-            var enrollment = await _context.Enrollments.FirstOrDefaultAsync(i => i.Id == request.Id, cancellationToken);
-            _context.Enrollments.Remove(enrollment);
-            await _context.SaveChangesAsync(cancellationToken);
+            var enrollment = await _context.Enrollments
+                .Include(e => e.Course)
+                .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken);
+
+            if (enrollment != null)
+            {
+                // If the enrollment was active, increase available seats when deleting
+                if (enrollment.Status == "Active")
+                {
+                    enrollment.Course.AvailableSeats++;
+                }
+
+                _context.Enrollments.Remove(enrollment);
+                await _context.SaveChangesAsync(cancellationToken);
+            }
+
             return Unit.Value;
         }
     }

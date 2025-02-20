@@ -19,28 +19,10 @@ namespace LearnHub.Back.Application.Handlers.Course
 
         public async Task<List<CourseDto>> Handle(GetAllCoursesQuery request, CancellationToken cancellationToken)
         {
-            //var courses = await _context.Courses.ToListAsync(cancellationToken);
-            //return _mapper.Map<List<CourseDto>>(courses);
-
-            return new List<CourseDto>()
-            {
-                new CourseDto()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Course 1",
-                    Description = "Description of course 1",
-                    StartDate = DateTime.UtcNow,
-                    EndDate = DateTime.UtcNow.AddMonths(1)
-                },
-                new CourseDto()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Course 2",
-                    Description = "Description of course 2",
-                    StartDate = DateTime.UtcNow,
-                    EndDate = DateTime.UtcNow.AddMonths(4)
-                }
-            };
+            var courses = await _context.Courses
+                .Include(c => c.Instructor)
+                .ToListAsync(cancellationToken);
+            return _mapper.Map<List<CourseDto>>(courses);
         }
     }
 }

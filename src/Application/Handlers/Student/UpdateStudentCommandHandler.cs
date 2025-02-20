@@ -1,13 +1,30 @@
+using AutoMapper;
+using LearnHub.Back.Infrastructure;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace LearnHub.Back.Application.Handlers.Student
 {
     public class UpdateStudentCommandHandler : IRequestHandler<UpdateStudentCommand, Unit>
     {
-        public Task<Unit> Handle(UpdateStudentCommand request, CancellationToken cancellationToken)
+        private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
+
+        public UpdateStudentCommandHandler(ApplicationDbContext context, IMapper mapper)
         {
-            // Logic to update a student
-            return Task.FromResult(Unit.Value);
+            _context = context;
+            _mapper = mapper;
+        }
+
+        public async Task<Unit> Handle(UpdateStudentCommand request, CancellationToken cancellationToken)
+        {
+            var student = await _context.Students.FirstOrDefaultAsync(s => s.Id == request.Id, cancellationToken);
+            if (student != null)
+            {
+                _mapper.Map(request, student);
+                await _context.SaveChangesAsync(cancellationToken);
+            }
+            return Unit.Value;
         }
     }
 }
