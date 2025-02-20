@@ -1,7 +1,7 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using LearnHub.Back.Api.Middleware;
-using LearnHub.Back.Application.Handlers.Curso;
+using LearnHub.Back.Application.Handlers.Course;
 using LearnHub.Back.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -33,7 +33,7 @@ builder.Services.AddCors(options =>
 
 //FluentValidation configuration
 builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddValidatorsFromAssembly(typeof(CreateCursoCommandValidator).Assembly);
+builder.Services.AddValidatorsFromAssembly(typeof(CreateCourseCommandValidator).Assembly);
 
 // MediatR configuration
 builder.Services.AddMediatR(cfg =>
@@ -48,7 +48,7 @@ builder.Services.AddSwaggerGen(options =>
     {
         Title = "Learn Hub API",
         Version = "v1",
-        Description = "API para la gestión de la plataforma educativa Learn Hub",
+        Description = "API for managing the Learn Hub educational platform",
         Contact = new OpenApiContact
         {
             Name = "Learn Hub Team"
@@ -96,8 +96,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Learn Hub API V1");
-        c.RoutePrefix = string.Empty; // Sirve la documentación en la raíz
-        c.DefaultModelsExpandDepth(-1); // Oculta los esquemas por defecto
+        c.RoutePrefix = string.Empty; // Serves documentation at root
+        c.DefaultModelsExpandDepth(-1); // Hide default schemas
     });
 }
 else

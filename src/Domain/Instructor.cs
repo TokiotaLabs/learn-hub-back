@@ -3,8 +3,8 @@ namespace LearnHub.Back.Domain;
 public class Instructor
 {
     public Guid Id { get; set; }
-    public string Nombre { get; set; }
-    public string Biografia { get; set; }
+    public string Name { get; set; }
+    public string Biography { get; set; }
 
-    public List<Curso> Cursos { get; set; } = new List<Curso>();
+    public List<Course> Courses { get; set; } = new List<Course>();
 }

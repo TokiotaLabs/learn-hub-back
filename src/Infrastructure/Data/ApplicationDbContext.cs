@@ -10,11 +10,11 @@ public class ApplicationDbContext : DbContext
     {
     }
 
-    public DbSet<Alumno> Alumnos { get; set; }
-    public DbSet<Curso> Cursos { get; set; }
-    public DbSet<Inscripcion> Inscripciones { get; set; }
-    public DbSet<Instructor> Instructores { get; set; }
-    public DbSet<Pago> Pagos { get; set; }
+    public DbSet<Student> Students { get; set; }
+    public DbSet<Course> Courses { get; set; }
+    public DbSet<Enrollment> Enrollments { get; set; }
+    public DbSet<Instructor> Instructors { get; set; }
+    public DbSet<Payment> Payments { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
