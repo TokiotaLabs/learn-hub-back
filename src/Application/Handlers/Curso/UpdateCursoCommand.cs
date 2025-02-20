@@ -1,10 +1,8 @@
 using MediatR;
-using LearnHub.Back.Application.DTOs;
-using System;
 
 namespace LearnHub.Back.Application.Handlers.Curso
 {
-    public class UpdateCursoCommand : IRequest
+    public class UpdateCursoCommand : IRequest<Unit>
     {
         public Guid Id { get; set; }
         public string Nombre { get; set; }

@@ -1,9 +1,7 @@
-using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
+using AutoMapper;
 using LearnHub.Back.Application.DTOs;
-using LearnHub.Back.Domain;
 using LearnHub.Back.Infrastructure;
+using MediatR;
 
 namespace LearnHub.Back.Application.Handlers.Inscripcion
 {
@@ -20,7 +18,7 @@ namespace LearnHub.Back.Application.Handlers.Inscripcion
 
         public async Task<InscripcionDto> Handle(CreateInscripcionCommand request, CancellationToken cancellationToken)
         {
-            var inscripcion = _mapper.Map<Inscripcion>(request);
+            var inscripcion = _mapper.Map<Domain.Inscripcion>(request);
             _context.Inscripciones.Add(inscripcion);
             await _context.SaveChangesAsync(cancellationToken);
             return _mapper.Map<InscripcionDto>(inscripcion);

@@ -1,14 +1,10 @@
-using MediatR;
-using LearnHub.Back.Application.DTOs;
-using LearnHub.Back.Domain;
-using LearnHub.Back.Infrastructure;
-using System.Threading;
-using System.Threading.Tasks;
 using AutoMapper;
+using LearnHub.Back.Infrastructure;
+using MediatR;
 
 namespace LearnHub.Back.Application.Handlers.Curso
 {
-    public class UpdateCursoCommandHandler : IRequestHandler<UpdateCursoCommand>
+    public class UpdateCursoCommandHandler : IRequestHandler<UpdateCursoCommand, Unit>
     {
         private readonly IMapper _mapper;
         private readonly ApplicationDbContext _context;
@@ -21,9 +17,9 @@ namespace LearnHub.Back.Application.Handlers.Curso
 
         public async Task<Unit> Handle(UpdateCursoCommand request, CancellationToken cancellationToken)
         {
-            var curso = await _context.Cursos.FindAsync(new object[] { request.Id }, cancellationToken);
-            _mapper.Map(request, curso);
-            await _context.SaveChangesAsync(cancellationToken);
+            //var curso = await _context.Cursos.FindAsync(new object[] { request.Id }, cancellationToken);
+            //_mapper.Map(request, curso);
+            //await _context.SaveChangesAsync(cancellationToken);
             return Unit.Value;
         }
     }

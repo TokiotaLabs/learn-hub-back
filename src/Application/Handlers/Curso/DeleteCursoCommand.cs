@@ -1,9 +1,8 @@
 using MediatR;
-using System;
 
 namespace LearnHub.Back.Application.Handlers.Curso
 {
-    public class DeleteCursoCommand : IRequest
+    public class DeleteCursoCommand : IRequest<Unit>
     {
         public Guid Id { get; set; }
     }

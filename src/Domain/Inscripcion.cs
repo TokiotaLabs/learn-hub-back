@@ -1,4 +1,4 @@
-using System;
+namespace LearnHub.Back.Domain;
 
 public class Inscripcion
 {

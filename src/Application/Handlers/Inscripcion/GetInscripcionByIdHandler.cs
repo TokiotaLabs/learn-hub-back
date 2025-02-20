@@ -1,8 +1,7 @@
-using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
+using AutoMapper;
 using LearnHub.Back.Application.DTOs;
 using LearnHub.Back.Infrastructure;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace LearnHub.Back.Application.Handlers.Inscripcion

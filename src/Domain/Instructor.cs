@@ -1,5 +1,4 @@
-using System;
-using System.Collections.Generic;
+namespace LearnHub.Back.Domain;
 
 public class Instructor
 {

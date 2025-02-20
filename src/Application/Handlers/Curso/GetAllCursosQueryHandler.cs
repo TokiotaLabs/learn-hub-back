@@ -1,11 +1,8 @@
-using MediatR;
-using LearnHub.Back.Application.DTOs;
-using LearnHub.Back.Domain;
-using LearnHub.Back.Infrastructure;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using AutoMapper;
+using LearnHub.Back.Application.DTOs;
+using LearnHub.Back.Infrastructure;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace LearnHub.Back.Application.Handlers.Curso
 {
@@ -22,8 +19,28 @@ namespace LearnHub.Back.Application.Handlers.Curso
 
         public async Task<List<CursoDto>> Handle(GetAllCursosQuery request, CancellationToken cancellationToken)
         {
-            var cursos = await _context.Cursos.ToListAsync(cancellationToken);
-            return _mapper.Map<List<CursoDto>>(cursos);
+            //var cursos = await _context.Cursos.ToListAsync(cancellationToken);
+            //return _mapper.Map<List<CursoDto>>(cursos);
+
+            return new List<CursoDto>()
+            {
+                new CursoDto()
+                {
+                    Id = Guid.NewGuid(),
+                    Nombre = "Curso 1",
+                    Descripcion = "Descrição do curso 1",
+                    FechaInicio = DateTime.UtcNow,
+                    FechaFin = DateTime.UtcNow.AddMonths(1)
+                },
+                new CursoDto()
+                {
+                    Id = Guid.NewGuid(),
+                    Nombre = "Curso 2",
+                    Descripcion = "Descrição do curso 2",
+                    FechaInicio = DateTime.UtcNow,
+                    FechaFin = DateTime.UtcNow.AddMonths(4)
+                }
+            };
         }
     }
 }

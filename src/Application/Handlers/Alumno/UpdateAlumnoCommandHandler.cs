@@ -1,10 +1,8 @@
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace LearnHub.Back.Application.Handlers.Alumno
 {
-    public class UpdateAlumnoCommandHandler : IRequestHandler<UpdateAlumnoCommand>
+    public class UpdateAlumnoCommandHandler : IRequestHandler<UpdateAlumnoCommand, Unit>
     {
         public Task<Unit> Handle(UpdateAlumnoCommand request, CancellationToken cancellationToken)
         {

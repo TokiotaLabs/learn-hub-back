@@ -1,10 +1,7 @@
-using MediatR;
-using LearnHub.Back.Application.DTOs;
-using LearnHub.Back.Domain;
-using LearnHub.Back.Infrastructure;
-using System.Threading;
-using System.Threading.Tasks;
 using AutoMapper;
+using LearnHub.Back.Application.DTOs;
+using LearnHub.Back.Infrastructure;
+using MediatR;
 
 namespace LearnHub.Back.Application.Handlers.Curso
 {
@@ -21,10 +18,19 @@ namespace LearnHub.Back.Application.Handlers.Curso
 
         public async Task<CursoDto> Handle(CreateCursoCommand request, CancellationToken cancellationToken)
         {
-            var curso = _mapper.Map<Curso>(request);
-            _context.Cursos.Add(curso);
-            await _context.SaveChangesAsync(cancellationToken);
-            return _mapper.Map<CursoDto>(curso);
+            //var curso = _mapper.Map<Domain.Curso>(request);
+            //_context.Cursos.Add(curso);
+            //await _context.SaveChangesAsync(cancellationToken);
+            //return _mapper.Map<CursoDto>(curso);
+
+            return new CursoDto()
+            {
+                Id = Guid.NewGuid(),
+                Nombre = request.Nombre,
+                Descripcion = request.Descripcion,
+                FechaInicio = request.FechaInicio,
+                FechaFin = request.FechaFin
+            };
         }
     }
 }
