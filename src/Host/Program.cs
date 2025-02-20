@@ -21,6 +21,16 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
     });
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins("http://localhost:*")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 //FluentValidation configuration
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssembly(typeof(CreateCursoCommandValidator).Assembly);
@@ -100,6 +110,7 @@ else
 app.UseErrorHandling();
 
 app.UseHttpsRedirection();
+app.UseCors();
 app.UseAuthorization();
 
 app.MapControllers();
