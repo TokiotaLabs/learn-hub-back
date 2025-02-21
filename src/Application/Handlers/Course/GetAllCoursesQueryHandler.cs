@@ -22,23 +22,31 @@ namespace LearnHub.Back.Application.Handlers.Course
             //var courses = await _context.Courses.ToListAsync(cancellationToken);
             //return _mapper.Map<List<CourseDto>>(courses);
 
-            return new List<CourseDto>()
+            return new List<CourseDto>
             {
-                new CourseDto()
+                new CourseDto
                 {
                     Id = Guid.NewGuid(),
-                    Name = "Course 1",
-                    Description = "Description of course 1",
-                    StartDate = DateTime.UtcNow,
-                    EndDate = DateTime.UtcNow.AddMonths(1)
+                    Name = "Desarrollo Web Full Stack",
+                    Description = "Curso completo de desarrollo web con HTML5, CSS3, JavaScript, React y Node.js",
+                    StartDate = DateTime.UtcNow.AddDays(15),
+                    EndDate = DateTime.UtcNow.AddMonths(6)
                 },
-                new CourseDto()
+                new CourseDto
                 {
                     Id = Guid.NewGuid(),
-                    Name = "Course 2",
-                    Description = "Description of course 2",
-                    StartDate = DateTime.UtcNow,
-                    EndDate = DateTime.UtcNow.AddMonths(4)
+                    Name = "Arquitectura de Software .NET",
+                    Description = "Patrones de diseño, principios SOLID y arquitectura limpia en .NET",
+                    StartDate = DateTime.UtcNow.AddDays(7),
+                    EndDate = DateTime.UtcNow.AddMonths(3)
+                },
+                new CourseDto
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "DevOps y CI/CD",
+                    Description = "Implementación de pipelines de CI/CD con Azure DevOps y GitHub Actions",
+                    StartDate = DateTime.UtcNow.AddDays(30),
+                    EndDate = DateTime.UtcNow.AddMonths(2)
                 }
             };
         }

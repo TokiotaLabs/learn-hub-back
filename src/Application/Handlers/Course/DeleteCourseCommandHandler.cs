@@ -17,6 +17,17 @@ namespace LearnHub.Back.Application.Handlers.Course
             //var course = await _context.Courses.FindAsync(new object[] { request.Id }, cancellationToken);
             //_context.Courses.Remove(course);
             //await _context.SaveChangesAsync(cancellationToken);
+
+            // Simulando la eliminación de un curso
+            // En un escenario real, aquí se validaría la existencia del curso y sus dependencias
+            if (request.Id == Guid.Empty)
+                throw new KeyNotFoundException("Course not found");
+
+            // Simulando que el curso tiene matrículas activas
+            if (request.Id == Guid.Parse("11111111-1111-1111-1111-111111111111"))
+                throw new InvalidOperationException("Cannot delete course with active enrollments");
+
+            // Simulando una eliminación exitosa
             return Unit.Value;
         }
     }
