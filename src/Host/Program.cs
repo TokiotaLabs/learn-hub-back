@@ -93,8 +93,20 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    var context = services.GetRequiredService<ApplicationDbContext>();
-    LearnHub.Back.Infrastructure.Data.DbInitializer.Initialize(context);
+    try
+    {
+        var context = services.GetRequiredService<ApplicationDbContext>();
+        // Ensure database is created and apply any pending migrations
+        context.Database.Migrate();
+        // Initialize with seed data
+        LearnHub.Back.Infrastructure.Data.DbInitializer.Initialize(context);
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred while migrating or initializing the database.");
+        throw;
+    }
 }
 
 // Configure the HTTP request pipeline.

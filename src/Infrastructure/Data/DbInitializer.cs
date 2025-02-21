@@ -198,42 +198,48 @@ public static class DbInitializer
                     StudentId = students[0].Id,
                     CourseId = context.Courses.First(c => c.Title == "Introduction to .NET").Id,
                     EnrollmentDate = DateTime.UtcNow.AddDays(-5),
-                    Status = "Active"
+                    Status = "Active",
+                    SchedulePreference = "Monday 18:00-20:00"
                 },
                 new Enrollment
                 {
                     StudentId = students[1].Id,
                     CourseId = context.Courses.First(c => c.Title == "Machine Learning Fundamentals").Id,
                     EnrollmentDate = DateTime.UtcNow.AddDays(-3),
-                    Status = "Active"
+                    Status = "Active",
+                    SchedulePreference = "Tuesday 17:00-20:00"
                 },
                 new Enrollment
                 {
                     StudentId = students[2].Id,
                     CourseId = context.Courses.First(c => c.Title == "Mobile App Development").Id,
                     EnrollmentDate = DateTime.UtcNow.AddDays(-2),
-                    Status = "Active"
+                    Status = "Active",
+                    SchedulePreference = "Thursday 18:00-21:00"
                 },
                 new Enrollment
                 {
                     StudentId = students[3].Id,
                     CourseId = context.Courses.First(c => c.Title == "Cloud Architecture").Id,
                     EnrollmentDate = DateTime.UtcNow.AddDays(-10),
-                    Status = "Completed"
+                    Status = "Completed",
+                    SchedulePreference = "Monday 19:00-22:00"
                 },
                 new Enrollment
                 {
                     StudentId = students[4].Id,
                     CourseId = context.Courses.First(c => c.Title == "Introduction to .NET").Id,
                     EnrollmentDate = DateTime.UtcNow.AddDays(-1),
-                    Status = "Pending"
+                    Status = "Pending",
+                    SchedulePreference = "Monday 18:00-20:00"
                 },
                 new Enrollment
                 {
                     StudentId = students[5].Id,
                     CourseId = context.Courses.First(c => c.Title == "Machine Learning Fundamentals").Id,
                     EnrollmentDate = DateTime.UtcNow.AddDays(-15),
-                    Status = "Dropped"
+                    Status = "Dropped",
+                    SchedulePreference = "Tuesday 17:00-20:00"
                 }
             };
 

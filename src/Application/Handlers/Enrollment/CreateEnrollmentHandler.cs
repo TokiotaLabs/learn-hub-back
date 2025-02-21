@@ -19,12 +19,22 @@ namespace LearnHub.Back.Application.Handlers.Enrollment
 
         public async Task<EnrollmentDto> Handle(CreateEnrollmentCommand request, CancellationToken cancellationToken)
         {
-            // First check if there are available seats
+            // First check if there are available seats and get course details
             var course = await _context.Courses.FindAsync(new object[] { request.CourseId }, cancellationToken);
             if (course != null && course.AvailableSeats > 0)
             {
                 var enrollment = _mapper.Map<Domain.Enrollment>(request);
                 enrollment.EnrollmentDate = DateTime.UtcNow;
+                
+                // Set default schedule preference if none provided
+                if (string.IsNullOrEmpty(enrollment.SchedulePreference) && course.Schedule.Any())
+                {
+                    enrollment.SchedulePreference = course.Schedule[0];
+                }
+                else if (string.IsNullOrEmpty(enrollment.SchedulePreference))
+                {
+                    enrollment.SchedulePreference = "Default Schedule";
+                }
                 
                 _context.Enrollments.Add(enrollment);
                 
