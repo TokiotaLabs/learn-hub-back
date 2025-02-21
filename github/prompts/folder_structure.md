@@ -142,6 +142,7 @@ Usa los siguientes comandos en la terminal:
 dotnet add src/Infrastructure/LearnHub.Back.Infrastructure.csproj reference src/Domain/LearnHub.Back.Domain.csproj
 dotnet add src/Infrastructure/LearnHub.Back.Infrastructure.csproj package Microsoft.EntityFrameworkCore.SqlServer --version 9.0.2
 dotnet add src/Infrastructure/LearnHub.Back.Infrastructure.csproj package Microsoft.EntityFrameworkCore.Tools --version 9.0.2
+dotnet add src/Infrastructure/LearnHub.Back.Infrastructure.csproj package Microsoft.EntityFrameworkCore.Design --version 9.0.2
 
 # Test
 Usa los siguientes comandos en la terminal:
