@@ -20,6 +20,13 @@ namespace LearnHub.Back.Application.Handlers.Course
             //var course = await _context.Courses.FindAsync(new object[] { request.Id }, cancellationToken);
             //_mapper.Map(request, course);
             //await _context.SaveChangesAsync(cancellationToken);
+
+            // Simulando la actualización de un curso
+            // En un escenario real, aquí se validaría la existencia del curso
+            if (request.Id == Guid.Empty)
+                throw new KeyNotFoundException("Course not found");
+
+            // Simulando una actualización exitosa
             return Unit.Value;
         }
     }

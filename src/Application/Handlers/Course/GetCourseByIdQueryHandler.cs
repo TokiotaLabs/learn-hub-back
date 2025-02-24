@@ -21,13 +21,17 @@ namespace LearnHub.Back.Application.Handlers.Course
             //var course = await _context.Courses.FindAsync(new object[] { request.Id }, cancellationToken);
             //return _mapper.Map<CourseDto>(course);
 
-            return new CourseDto()
+            // Simulando que encontramos el curso con el ID solicitado
+            if (request.Id == Guid.Empty)
+                return null;
+
+            return new CourseDto
             {
-                Id = Guid.NewGuid(),
-                Name = "Course 3",
-                Description = "Description of course 3",
-                StartDate = DateTime.UtcNow,
-                EndDate = DateTime.UtcNow.AddMonths(6)
+                Id = request.Id,
+                Name = "Microservicios con .NET",
+                Description = "Diseño e implementación de arquitecturas basadas en microservicios utilizando .NET, Docker y Kubernetes. Incluye patrones de comunicación, resiliencia y monitoreo.",
+                StartDate = DateTime.UtcNow.AddDays(20),
+                EndDate = DateTime.UtcNow.AddMonths(4)
             };
         }
     }

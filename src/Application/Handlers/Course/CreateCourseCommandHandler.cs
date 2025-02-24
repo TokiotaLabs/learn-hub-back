@@ -23,7 +23,8 @@ namespace LearnHub.Back.Application.Handlers.Course
             //await _context.SaveChangesAsync(cancellationToken);
             //return _mapper.Map<CourseDto>(course);
 
-            return new CourseDto()
+            // Simulando la creación de un curso con datos adicionales
+            return new CourseDto
             {
                 Id = Guid.NewGuid(),
                 Name = request.Name,
