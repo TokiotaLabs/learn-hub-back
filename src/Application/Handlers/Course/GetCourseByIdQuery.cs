@@ -4,7 +4,7 @@ using System;
 
 namespace LearnHub.Back.Application.Handlers.Course
 {
-    public class GetCourseByIdQuery : IRequest<CourseDto>
+    public class GetCourseByIdQuery : IRequest<CourseDto?>
     {
         public Guid Id { get; set; }
     }

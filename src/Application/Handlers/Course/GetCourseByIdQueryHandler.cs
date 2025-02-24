@@ -2,33 +2,29 @@ using AutoMapper;
 using LearnHub.Back.Application.DTOs;
 using LearnHub.Back.Infrastructure;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace LearnHub.Back.Application.Handlers.Course
 {
-    public class GetCourseByIdQueryHandler : IRequestHandler<GetCourseByIdQuery, CourseDto>
+    public class GetCourseByIdQueryHandler : IRequestHandler<GetCourseByIdQuery, CourseDto?>
     {
-        private readonly IMapper _mapper;
         private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public GetCourseByIdQueryHandler(IMapper mapper, ApplicationDbContext context)
+        public GetCourseByIdQueryHandler(ApplicationDbContext context, IMapper mapper)
         {
-            _mapper = mapper;
             _context = context;
+            _mapper = mapper;
         }
 
-        public async Task<CourseDto> Handle(GetCourseByIdQuery request, CancellationToken cancellationToken)
+        public async Task<CourseDto?> Handle(GetCourseByIdQuery request, CancellationToken cancellationToken)
         {
-            //var course = await _context.Courses.FindAsync(new object[] { request.Id }, cancellationToken);
-            //return _mapper.Map<CourseDto>(course);
+            var course = await _context.Courses
+                .Include(c => c.Instructor)
+                .Include(c => c.Enrollments)
+                .FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken);
 
-            return new CourseDto()
-            {
-                Id = Guid.NewGuid(),
-                Name = "Course 3",
-                Description = "Description of course 3",
-                StartDate = DateTime.UtcNow,
-                EndDate = DateTime.UtcNow.AddMonths(6)
-            };
+            return course == null ? null : _mapper.Map<CourseDto>(course);
         }
     }
 }
