@@ -1,3 +1,4 @@
+using LearnHub.Back.Domain;
 using System.ComponentModel.DataAnnotations;
 
 namespace LearnHub.Back.Application.DTOs
@@ -16,8 +17,8 @@ namespace LearnHub.Back.Application.DTOs
         /// Name of the course
         /// </summary>
         [Required(ErrorMessage = "Course name is required")]
-        [StringLength(100, MinimumLength = 3, ErrorMessage = "Name must be between 3 and 100 characters")]
-        public string Name { get; set; }
+        [StringLength(100, MinimumLength = 3, ErrorMessage = "Title must be between 3 and 100 characters")]
+        public string Title { get; set; }
 
         /// <summary>
         /// Detailed description of the course
@@ -37,5 +38,19 @@ namespace LearnHub.Back.Application.DTOs
         /// </summary>
         [Required(ErrorMessage = "End date is required")]
         public DateTime EndDate { get; set; }
+
+        public int Duration { get; set; }
+        public decimal Price { get; set; }
+        public string Prerequisites { get; set; }
+        public Guid InstructorId { get; set; }
+        public Instructor Instructor { get; set; }
+        public string Modality { get; set; }
+        public string IncludedMaterials { get; set; }
+        public string Certification { get; set; }
+        public int AvailableSeats { get; set; }
+        public string Location { get; set; }
+        public string Category { get; set; }
+
+        public List<EnrollmentDto> Enrollments { get; set; } = new List<EnrollmentDto>();
     }
 }

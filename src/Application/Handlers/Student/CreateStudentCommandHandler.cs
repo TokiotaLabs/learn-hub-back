@@ -20,9 +20,14 @@ namespace LearnHub.Back.Application.Handlers.Student
         {
             var student = new Domain.Student
             {
-                Id = Guid.NewGuid(),
+                //Id = Guid.NewGuid(),
                 FullName = $"{request.FirstName} {request.LastName}",
-                Email = request.Email
+                Email = request.Email,
+                PhoneNumber = "666666666",
+                CurrentOccupation = "asfds",
+                EducationLevel = "asfds",
+                PostalAddress = "asfds",
+                PreviousExperience = "asfds"
             };
 
             _context.Students.Add(student);
