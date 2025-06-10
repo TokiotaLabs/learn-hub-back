@@ -118,5 +118,23 @@ namespace LearnHub.Back.Api.Controllers
             await _mediator.Send(new DeleteCourseCommand { Id = id });
             return NoContent();
         }
+
+        /// <summary>
+        /// Gets the top 10 most popular courses based on enrollment count
+        /// </summary>
+        /// <param name="count">Number of courses to return (default: 10)</param>
+        /// <returns>List of most popular courses with enrollment statistics</returns>
+        /// <response code="200">Returns the list of most popular courses</response>
+        [HttpGet("popular")]
+        [SwaggerOperation(
+            Summary = "Gets the most popular courses",
+            Description = "Retrieves the top courses ordered by enrollment count with detailed statistics")]
+        [ProducesResponseType(typeof(List<PopularCourseDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<List<PopularCourseDto>>> GetMostPopular([FromQuery] int count = 10)
+        {
+            var query = new GetMostPopularCoursesQuery { Count = count };
+            var result = await _mediator.Send(query);
+            return Ok(result);
+        }
     }
 }
