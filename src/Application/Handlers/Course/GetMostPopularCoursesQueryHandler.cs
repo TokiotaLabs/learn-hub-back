@@ -9,12 +9,10 @@ namespace LearnHub.Back.Application.Handlers.Course
     public class GetMostPopularCoursesQueryHandler : IRequestHandler<GetMostPopularCoursesQuery, List<PopularCourseDto>>
     {
         private readonly ApplicationDbContext _context;
-        private readonly IMapper _mapper;
 
-        public GetMostPopularCoursesQueryHandler(ApplicationDbContext context, IMapper mapper)
+        public GetMostPopularCoursesQueryHandler(ApplicationDbContext context)
         {
             _context = context;
-            _mapper = mapper;
         }
 
         public async Task<List<PopularCourseDto>> Handle(GetMostPopularCoursesQuery request, CancellationToken cancellationToken)
