@@ -26,9 +26,9 @@ namespace LearnHub.Back.Tests.Application.Handlers.Course
 
             var config = new MapperConfiguration(cfg => 
             {
-                cfg.CreateMap<CreateCourseCommand, Domain.Course>();
-                cfg.CreateMap<UpdateCourseCommand, Domain.Course>();
-                cfg.CreateMap<Domain.Course, CourseDto>();
+                cfg.AddProfile<LearnHub.Back.Application.Mappings.CourseProfile>();
+                cfg.AddProfile<LearnHub.Back.Application.Mappings.EnrollmentProfile>();
+                cfg.AddProfile<LearnHub.Back.Application.Mappings.StudentProfile>();
             });
             
             _mapper = config.CreateMapper();
@@ -156,6 +156,85 @@ namespace LearnHub.Back.Tests.Application.Handlers.Course
             // Act & Assert
             await handler.Invoking(h => h.Handle(command, CancellationToken.None))
                 .Should().ThrowAsync<KeyNotFoundException>();
+        }
+
+        [Test]
+        public async Task GetTop10MostSuccessfulCourses_ShouldReturnCoursesOrderedByApprovedEnrollments()
+        {
+            // Arrange
+            var instructor = new Domain.Instructor { Name = "John Doe", Biography = "Expert instructor" };
+            await _context.Instructors.AddAsync(instructor);
+            await _context.SaveChangesAsync();
+
+            // Create courses with different numbers of approved enrollments
+            var course1 = new Domain.Course 
+            { 
+                Title = "Course 1", 
+                Description = "Description 1",
+                StartDate = DateTime.UtcNow,
+                EndDate = DateTime.UtcNow.AddDays(30),
+                Duration = 5,
+                Price = 100m,
+                Prerequisites = "None",
+                InstructorId = instructor.Id,
+                Modality = "Online",
+                IncludedMaterials = "Materials",
+                Certification = "Certificate",
+                AvailableSeats = 20,
+                Location = "Online",
+                Category = "Technology"
+            };
+            var course2 = new Domain.Course 
+            { 
+                Title = "Course 2", 
+                Description = "Description 2",
+                StartDate = DateTime.UtcNow,
+                EndDate = DateTime.UtcNow.AddDays(30),
+                Duration = 5,
+                Price = 150m,
+                Prerequisites = "None",
+                InstructorId = instructor.Id,
+                Modality = "Online",
+                IncludedMaterials = "Materials",
+                Certification = "Certificate",
+                AvailableSeats = 20,
+                Location = "Online",
+                Category = "Technology"
+            };
+
+            await _context.Courses.AddRangeAsync(course1, course2);
+            await _context.SaveChangesAsync();
+
+            // Create students
+            var student1 = new Domain.Student { FullName = "Student 1", Email = "student1@test.com", PhoneNumber = "123", PostalAddress = "Address", CurrentOccupation = "Student", EducationLevel = "High School", PreviousExperience = "None" };
+            var student2 = new Domain.Student { FullName = "Student 2", Email = "student2@test.com", PhoneNumber = "124", PostalAddress = "Address", CurrentOccupation = "Student", EducationLevel = "High School", PreviousExperience = "None" };
+            var student3 = new Domain.Student { FullName = "Student 3", Email = "student3@test.com", PhoneNumber = "125", PostalAddress = "Address", CurrentOccupation = "Student", EducationLevel = "High School", PreviousExperience = "None" };
+            
+            await _context.Students.AddRangeAsync(student1, student2, student3);
+            await _context.SaveChangesAsync();
+
+            // Add enrollments: Course2 should have more approved enrollments than Course1
+            var enrollments = new[]
+            {
+                new Domain.Enrollment { StudentId = student1.Id, CourseId = course1.Id, Status = "Approved", EnrollmentDate = DateTime.UtcNow, SchedulePreference = "Morning", PaymentId = Guid.NewGuid() },
+                new Domain.Enrollment { StudentId = student2.Id, CourseId = course2.Id, Status = "Approved", EnrollmentDate = DateTime.UtcNow, SchedulePreference = "Morning", PaymentId = Guid.NewGuid() },
+                new Domain.Enrollment { StudentId = student3.Id, CourseId = course2.Id, Status = "Approved", EnrollmentDate = DateTime.UtcNow, SchedulePreference = "Morning", PaymentId = Guid.NewGuid() },
+                new Domain.Enrollment { StudentId = student1.Id, CourseId = course2.Id, Status = "Pending", EnrollmentDate = DateTime.UtcNow, SchedulePreference = "Morning", PaymentId = Guid.NewGuid() }, // Should not count
+            };
+
+            await _context.Enrollments.AddRangeAsync(enrollments);
+            await _context.SaveChangesAsync();
+
+            var handler = new GetTop10MostSuccessfulCoursesQueryHandler(_context, _mapper);
+
+            // Act
+            var result = await handler.Handle(new GetTop10MostSuccessfulCoursesQuery(), CancellationToken.None);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Should().HaveCount(2);
+            result[0].Title.Should().Be("Course 2"); // Should be first because it has 2 approved enrollments
+            result[1].Title.Should().Be("Course 1"); // Should be second because it has 1 approved enrollment
         }
 
         [TearDown]

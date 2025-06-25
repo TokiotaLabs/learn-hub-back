@@ -34,6 +34,26 @@ public class CourseControllerTests
 
     [Test]
     [AutoMoqData]
+    public async Task GetTop10MostSuccessful_ShouldReturnOkWithTopCourses(
+        List<CourseDto> topCourses,
+        [Frozen] Mock<IMediator> mediatorMock,
+        CourseController sut)
+    {
+        // Arrange
+        mediatorMock.Setup(x => x.Send(It.IsAny<GetTop10MostSuccessfulCoursesQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(topCourses);
+
+        // Act
+        var result = await sut.GetTop10MostSuccessful();
+
+        // Assert
+        result.Result.Should().BeOfType<OkObjectResult>();
+        var okResult = result.Result as OkObjectResult;
+        okResult!.Value.Should().BeEquivalentTo(topCourses);
+    }
+
+    [Test]
+    [AutoMoqData]
     public async Task GetById_WithExistingId_ShouldReturnOkWithCourse(
         CourseDto course,
         Guid courseId,
