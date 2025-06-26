@@ -1,5 +1,6 @@
 using AutoMapper;
 using LearnHub.Back.Application.DTOs;
+using LearnHub.Back.Domain;
 using LearnHub.Back.Infrastructure;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -25,7 +26,7 @@ namespace LearnHub.Back.Application.Handlers.Course
                 .Select(c => new 
                 {
                     Course = c,
-                    ApprovedEnrollmentsCount = c.Enrollments.Count(e => e.Status == "Approved")
+                    ApprovedEnrollmentsCount = c.Enrollments.Count(e => e.Status == EnrollmentStatus.Approved.ToString())
                 })
                 .OrderByDescending(x => x.ApprovedEnrollmentsCount)
                 .Take(10)
