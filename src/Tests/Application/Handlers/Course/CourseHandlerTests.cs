@@ -158,6 +158,167 @@ namespace LearnHub.Back.Tests.Application.Handlers.Course
                 .Should().ThrowAsync<KeyNotFoundException>();
         }
 
+        [Test]
+        public async Task GetTop10MostSuccessfulCoursesQueryHandler_ShouldReturnCoursesOrderedByApprovedEnrollments()
+        {
+            // Arrange
+            var logger = new Microsoft.Extensions.Logging.Abstractions.NullLogger<GetTop10MostSuccessfulCoursesQueryHandler>();
+            var handler = new GetTop10MostSuccessfulCoursesQueryHandler(_context, _mapper, logger);
+            
+            // Create test data - Instructors
+            var instructor1 = new Domain.Instructor 
+            { 
+                Id = Guid.NewGuid(), 
+                Name = "John Doe", 
+                Email = "john@test.com",
+                Courses = new List<Domain.Course>()
+            };
+            var instructor2 = new Domain.Instructor 
+            { 
+                Id = Guid.NewGuid(), 
+                Name = "Jane Smith", 
+                Email = "jane@test.com",
+                Courses = new List<Domain.Course>()
+            };
+            
+            await _context.Instructors.AddRangeAsync(instructor1, instructor2);
+            
+            // Create test data - Students
+            var students = new List<Domain.Student>();
+            for (int i = 0; i < 15; i++)
+            {
+                students.Add(new Domain.Student 
+                { 
+                    Id = Guid.NewGuid(), 
+                    Name = $"Student {i}", 
+                    Email = $"student{i}@test.com",
+                    Enrollments = new List<Domain.Enrollment>()
+                });
+            }
+            await _context.Students.AddRangeAsync(students);
+            
+            // Create test data - Courses
+            var course1 = new Domain.Course 
+            { 
+                Id = Guid.NewGuid(), 
+                Title = "Most Popular Course",
+                Description = "Description 1",
+                InstructorId = instructor1.Id,
+                Instructor = instructor1,
+                Price = 100m,
+                StartDate = DateTime.Now.AddDays(10),
+                EndDate = DateTime.Now.AddDays(40),
+                Duration = 30,
+                Enrollments = new List<Domain.Enrollment>()
+            };
+            
+            var course2 = new Domain.Course 
+            { 
+                Id = Guid.NewGuid(), 
+                Title = "Second Most Popular",
+                Description = "Description 2",
+                InstructorId = instructor2.Id,
+                Instructor = instructor2,
+                Price = 150m,
+                StartDate = DateTime.Now.AddDays(15),
+                EndDate = DateTime.Now.AddDays(45),
+                Duration = 25,
+                Enrollments = new List<Domain.Enrollment>()
+            };
+            
+            var course3 = new Domain.Course 
+            { 
+                Id = Guid.NewGuid(), 
+                Title = "Least Popular Course",
+                Description = "Description 3",
+                InstructorId = instructor1.Id,
+                Instructor = instructor1,
+                Price = 75m,
+                StartDate = DateTime.Now.AddDays(20),
+                EndDate = DateTime.Now.AddDays(50),
+                Duration = 20,
+                Enrollments = new List<Domain.Enrollment>()
+            };
+            
+            await _context.Courses.AddRangeAsync(course1, course2, course3);
+            await _context.SaveChangesAsync();
+            
+            // Create enrollments - Course 1: 5 approved, 2 pending
+            for (int i = 0; i < 5; i++)
+            {
+                await _context.Enrollments.AddAsync(new Domain.Enrollment
+                {
+                    Id = Guid.NewGuid(),
+                    StudentId = students[i].Id,
+                    CourseId = course1.Id,
+                    Status = "Approved",
+                    EnrollmentDate = DateTime.Now.AddDays(-i)
+                });
+            }
+            for (int i = 5; i < 7; i++)
+            {
+                await _context.Enrollments.AddAsync(new Domain.Enrollment
+                {
+                    Id = Guid.NewGuid(),
+                    StudentId = students[i].Id,
+                    CourseId = course1.Id,
+                    Status = "Pending",
+                    EnrollmentDate = DateTime.Now.AddDays(-i)
+                });
+            }
+            
+            // Create enrollments - Course 2: 3 approved, 1 rejected
+            for (int i = 7; i < 10; i++)
+            {
+                await _context.Enrollments.AddAsync(new Domain.Enrollment
+                {
+                    Id = Guid.NewGuid(),
+                    StudentId = students[i].Id,
+                    CourseId = course2.Id,
+                    Status = "Approved",
+                    EnrollmentDate = DateTime.Now.AddDays(-i)
+                });
+            }
+            await _context.Enrollments.AddAsync(new Domain.Enrollment
+            {
+                Id = Guid.NewGuid(),
+                StudentId = students[10].Id,
+                CourseId = course2.Id,
+                Status = "Rejected",
+                EnrollmentDate = DateTime.Now.AddDays(-10)
+            });
+            
+            // Create enrollments - Course 3: 1 approved
+            await _context.Enrollments.AddAsync(new Domain.Enrollment
+            {
+                Id = Guid.NewGuid(),
+                StudentId = students[11].Id,
+                CourseId = course3.Id,
+                Status = "Approved",
+                EnrollmentDate = DateTime.Now.AddDays(-11)
+            });
+            
+            await _context.SaveChangesAsync();
+            
+            var query = new GetTop10MostSuccessfulCoursesQuery();
+
+            // Act
+            var result = await handler.Handle(query, CancellationToken.None);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Should().HaveCount(3);
+            
+            // Should be ordered by approved enrollments count (descending)
+            result[0].Title.Should().Be("Most Popular Course");      // 5 approved
+            result[1].Title.Should().Be("Second Most Popular");     // 3 approved  
+            result[2].Title.Should().Be("Least Popular Course");    // 1 approved
+            
+            // Verify instructor information is included
+            result[0].Instructor.Should().NotBeNull();
+            result[0].Instructor.Name.Should().Be("John Doe");
+        }
+
         [TearDown]
         public void TearDown()
         {

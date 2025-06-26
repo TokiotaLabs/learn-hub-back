@@ -38,6 +38,22 @@ namespace LearnHub.Back.Api.Controllers
         }
 
         /// <summary>
+        /// Gets the top 10 most successful courses
+        /// </summary>
+        /// <returns>List of top 10 courses ranked by approved enrollments</returns>
+        /// <response code="200">Returns the top 10 most successful courses</response>
+        [HttpGet("top-successful")]
+        [SwaggerOperation(
+            Summary = "Gets top 10 most successful courses",
+            Description = "Retrieves the 10 most successful courses ranked by the number of approved enrollments")]
+        [ProducesResponseType(typeof(List<CourseDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<List<CourseDto>>> GetTopSuccessful()
+        {
+            var result = await _mediator.Send(new GetTop10MostSuccessfulCoursesQuery());
+            return Ok(result);
+        }
+
+        /// <summary>
         /// Gets a specific course by its ID
         /// </summary>
         /// <param name="id">Course ID</param>
