@@ -28,7 +28,12 @@ namespace LearnHub.Back.Tests.Application.Handlers.Course
             {
                 cfg.CreateMap<CreateCourseCommand, Domain.Course>();
                 cfg.CreateMap<UpdateCourseCommand, Domain.Course>();
-                cfg.CreateMap<Domain.Course, CourseDto>();
+                cfg.CreateMap<Domain.Course, CourseDto>()
+                    .ForMember(dest => dest.Enrollments, opt => opt.Ignore()); // Ignore to avoid circular reference in test
+                cfg.CreateMap<Domain.Enrollment, EnrollmentDto>()
+                    .ForMember(dest => dest.Student, opt => opt.Ignore())
+                    .ForMember(dest => dest.Course, opt => opt.Ignore());
+                cfg.CreateMap<Domain.Student, StudentDto>();
             });
             
             _mapper = config.CreateMapper();
@@ -156,6 +161,104 @@ namespace LearnHub.Back.Tests.Application.Handlers.Course
             // Act & Assert
             await handler.Invoking(h => h.Handle(command, CancellationToken.None))
                 .Should().ThrowAsync<KeyNotFoundException>();
+        }
+
+        [Test]
+        public async Task GetTopSuccessfulCourses_ShouldReturnCoursesOrderedByApprovedEnrollmentsDesc()
+        {
+            // Arrange
+            var instructor = new Domain.Instructor
+            {
+                Id = Guid.NewGuid(),
+                Name = "Test Instructor",
+                Biography = "Test Bio"
+            };
+            _context.Instructors.Add(instructor);
+
+            var course1 = new Domain.Course
+            {
+                Id = Guid.NewGuid(),
+                Title = "Course 1",
+                Description = "Description 1",
+                Price = 100m,
+                Duration = 5,
+                Prerequisites = "None",
+                Modality = "Online",
+                IncludedMaterials = "Materials",
+                Certification = "Cert",
+                Location = "Online",
+                Category = "Tech",
+                InstructorId = instructor.Id
+            };
+
+            var course2 = new Domain.Course
+            {
+                Id = Guid.NewGuid(),
+                Title = "Course 2",
+                Description = "Description 2",
+                Price = 200m,
+                Duration = 10,
+                Prerequisites = "Basic",
+                Modality = "Hybrid",
+                IncludedMaterials = "Materials 2",
+                Certification = "Cert 2",
+                Location = "Campus",
+                Category = "Business",
+                InstructorId = instructor.Id
+            };
+
+            var course3 = new Domain.Course
+            {
+                Id = Guid.NewGuid(),
+                Title = "Course 3",
+                Description = "Description 3",
+                Price = 150m,
+                Duration = 7,
+                Prerequisites = "Intermediate",
+                Modality = "Online",
+                IncludedMaterials = "Materials 3",
+                Certification = "Cert 3",
+                Location = "Online",
+                Category = "Design",
+                InstructorId = instructor.Id
+            };
+
+            _context.Courses.AddRange(course1, course2, course3);
+
+            // Course 1: 3 approved enrollments
+            var enrollment1 = new Domain.Enrollment { Id = Guid.NewGuid(), CourseId = course1.Id, StudentId = Guid.NewGuid(), Status = "Approved", EnrollmentDate = DateTime.UtcNow, SchedulePreference = "Morning", PaymentId = Guid.NewGuid() };
+            var enrollment2 = new Domain.Enrollment { Id = Guid.NewGuid(), CourseId = course1.Id, StudentId = Guid.NewGuid(), Status = "Approved", EnrollmentDate = DateTime.UtcNow, SchedulePreference = "Afternoon", PaymentId = Guid.NewGuid() };
+            var enrollment3 = new Domain.Enrollment { Id = Guid.NewGuid(), CourseId = course1.Id, StudentId = Guid.NewGuid(), Status = "Approved", EnrollmentDate = DateTime.UtcNow, SchedulePreference = "Evening", PaymentId = Guid.NewGuid() };
+
+            // Course 2: 5 approved enrollments
+            var enrollment4 = new Domain.Enrollment { Id = Guid.NewGuid(), CourseId = course2.Id, StudentId = Guid.NewGuid(), Status = "Approved", EnrollmentDate = DateTime.UtcNow, SchedulePreference = "Morning", PaymentId = Guid.NewGuid() };
+            var enrollment5 = new Domain.Enrollment { Id = Guid.NewGuid(), CourseId = course2.Id, StudentId = Guid.NewGuid(), Status = "Approved", EnrollmentDate = DateTime.UtcNow, SchedulePreference = "Afternoon", PaymentId = Guid.NewGuid() };
+            var enrollment6 = new Domain.Enrollment { Id = Guid.NewGuid(), CourseId = course2.Id, StudentId = Guid.NewGuid(), Status = "Approved", EnrollmentDate = DateTime.UtcNow, SchedulePreference = "Evening", PaymentId = Guid.NewGuid() };
+            var enrollment7 = new Domain.Enrollment { Id = Guid.NewGuid(), CourseId = course2.Id, StudentId = Guid.NewGuid(), Status = "Approved", EnrollmentDate = DateTime.UtcNow, SchedulePreference = "Morning", PaymentId = Guid.NewGuid() };
+            var enrollment8 = new Domain.Enrollment { Id = Guid.NewGuid(), CourseId = course2.Id, StudentId = Guid.NewGuid(), Status = "Approved", EnrollmentDate = DateTime.UtcNow, SchedulePreference = "Afternoon", PaymentId = Guid.NewGuid() };
+
+            // Course 3: 1 approved enrollment and 2 rejected (should not count rejected ones)
+            var enrollment9 = new Domain.Enrollment { Id = Guid.NewGuid(), CourseId = course3.Id, StudentId = Guid.NewGuid(), Status = "Approved", EnrollmentDate = DateTime.UtcNow, SchedulePreference = "Morning", PaymentId = Guid.NewGuid() };
+            var enrollment10 = new Domain.Enrollment { Id = Guid.NewGuid(), CourseId = course3.Id, StudentId = Guid.NewGuid(), Status = "Rejected", EnrollmentDate = DateTime.UtcNow, SchedulePreference = "Afternoon", PaymentId = Guid.NewGuid() };
+            var enrollment11 = new Domain.Enrollment { Id = Guid.NewGuid(), CourseId = course3.Id, StudentId = Guid.NewGuid(), Status = "Rejected", EnrollmentDate = DateTime.UtcNow, SchedulePreference = "Evening", PaymentId = Guid.NewGuid() };
+
+            _context.Enrollments.AddRange(enrollment1, enrollment2, enrollment3, enrollment4, enrollment5, enrollment6, enrollment7, enrollment8, enrollment9, enrollment10, enrollment11);
+            await _context.SaveChangesAsync();
+
+            var handler = new GetTopSuccessfulCoursesQueryHandler(_context, _mapper);
+            var query = new GetTopSuccessfulCoursesQuery();
+
+            // Act
+            var result = await handler.Handle(query, CancellationToken.None);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Should().HaveCount(3);
+            
+            // Should be ordered by approved enrollments count descending
+            result[0].Title.Should().Be("Course 2"); // 5 approved enrollments
+            result[1].Title.Should().Be("Course 1"); // 3 approved enrollments
+            result[2].Title.Should().Be("Course 3"); // 1 approved enrollment
         }
 
         [TearDown]
