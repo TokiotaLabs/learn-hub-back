@@ -147,4 +147,24 @@ public class CourseControllerTests
         // Assert
         result.Should().BeOfType<NoContentResult>();
     }
+
+    [Test]
+    [AutoMoqData]
+    public async Task GetLeastDemand_ShouldReturnOkWithLeastDemandCourses(
+        List<CourseDto> courses,
+        [Frozen] Mock<IMediator> mediatorMock,
+        CourseController sut)
+    {
+        // Arrange
+        mediatorMock.Setup(x => x.Send(It.IsAny<GetLeastDemandCoursesQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(courses);
+
+        // Act
+        var result = await sut.GetLeastDemand();
+
+        // Assert
+        result.Result.Should().BeOfType<OkObjectResult>();
+        var okResult = result.Result as OkObjectResult;
+        okResult!.Value.Should().BeEquivalentTo(courses);
+    }
 }
