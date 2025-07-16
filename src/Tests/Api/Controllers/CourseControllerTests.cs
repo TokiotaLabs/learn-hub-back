@@ -147,4 +147,43 @@ public class CourseControllerTests
         // Assert
         result.Should().BeOfType<NoContentResult>();
     }
+
+    [Test]
+    [AutoMoqData]
+    public async Task GetMostSuccessful_WithSuccessfulCourse_ShouldReturnOkWithCourse(
+        MostSuccessfulCourseDto mostSuccessfulCourse,
+        [Frozen] Mock<IMediator> mediatorMock,
+        CourseController sut)
+    {
+        // Arrange
+        mediatorMock.Setup(x => x.Send(It.IsAny<GetMostSuccessfulCourseQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(mostSuccessfulCourse);
+
+        // Act
+        var result = await sut.GetMostSuccessful();
+
+        // Assert
+        result.Result.Should().BeOfType<OkObjectResult>();
+        var okResult = result.Result as OkObjectResult;
+        okResult!.Value.Should().BeEquivalentTo(mostSuccessfulCourse);
+    }
+
+    [Test]
+    [AutoMoqData]
+    public async Task GetMostSuccessful_WithNoCoursesWithEnrollments_ShouldReturnNotFound(
+        [Frozen] Mock<IMediator> mediatorMock,
+        CourseController sut)
+    {
+        // Arrange
+        mediatorMock.Setup(x => x.Send(It.IsAny<GetMostSuccessfulCourseQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((MostSuccessfulCourseDto?)null);
+
+        // Act
+        var result = await sut.GetMostSuccessful();
+
+        // Assert
+        result.Result.Should().BeOfType<NotFoundObjectResult>();
+        var notFoundResult = result.Result as NotFoundObjectResult;
+        notFoundResult!.Value.Should().Be("No courses with enrollments found");
+    }
 }

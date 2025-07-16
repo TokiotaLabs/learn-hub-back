@@ -118,5 +118,25 @@ namespace LearnHub.Back.Api.Controllers
             await _mediator.Send(new DeleteCourseCommand { Id = id });
             return NoContent();
         }
+
+        /// <summary>
+        /// Gets the most successful course by enrollment count
+        /// </summary>
+        /// <returns>The course with the highest number of enrollments</returns>
+        /// <response code="200">Returns the most successful course</response>
+        /// <response code="404">No courses with enrollments found</response>
+        [HttpGet("most-successful")]
+        [SwaggerOperation(
+            Summary = "Gets the most successful course",
+            Description = "Retrieves the course with the highest number of enrollments")]
+        [ProducesResponseType(typeof(MostSuccessfulCourseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<MostSuccessfulCourseDto>> GetMostSuccessful()
+        {
+            var result = await _mediator.Send(new GetMostSuccessfulCourseQuery());
+            if (result == null)
+                return NotFound("No courses with enrollments found");
+            return Ok(result);
+        }
     }
 }
