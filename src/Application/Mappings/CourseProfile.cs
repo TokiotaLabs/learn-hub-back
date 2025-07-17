@@ -11,6 +11,9 @@ public class CourseProfile : Profile
     {
         CreateMap<Course, CourseDto>();
 
+        CreateMap<Course, CourseDemandDto>()
+            .ForMember(dest => dest.EnrollmentCount, opt => opt.MapFrom(src => src.Enrollments.Count));
+
         CreateMap<CreateCourseCommand, Course>();
         CreateMap<UpdateCourseCommand, Course>();
     }
