@@ -27,16 +27,40 @@ namespace LearnHub.Back.Application.Handlers.Course
                 .Distinct()
                 .CountAsync(cancellationToken);
 
-            // Get the course with the most enrollments
-            var mostDemandedCourse = await _context.Courses
-                .Include(c => c.Instructor)
-                .Select(c => new { Course = c, EnrollmentCount = c.Enrollments.Count })
+            // Get the course with the most enrollments without complex navigation properties
+            var mostDemandedCourseId = await _context.Courses
+                .Select(c => new { CourseId = c.Id, EnrollmentCount = c.Enrollments.Count })
                 .OrderByDescending(x => x.EnrollmentCount)
+                .Select(x => x.CourseId)
                 .FirstOrDefaultAsync(cancellationToken);
 
-            if (mostDemandedCourse != null)
+            if (mostDemandedCourseId != Guid.Empty)
             {
-                result.MostDemandedCourse = _mapper.Map<CourseDto>(mostDemandedCourse.Course);
+                var courseData = await _context.Courses
+                    .Where(c => c.Id == mostDemandedCourseId)
+                    .FirstOrDefaultAsync(cancellationToken);
+
+                if (courseData != null)
+                {
+                    result.MostDemandedCourse = new CourseDto
+                    {
+                        Id = courseData.Id,
+                        Title = courseData.Title,
+                        Description = courseData.Description,
+                        StartDate = courseData.StartDate,
+                        EndDate = courseData.EndDate,
+                        Duration = courseData.Duration,
+                        Price = courseData.Price,
+                        Prerequisites = courseData.Prerequisites,
+                        InstructorId = courseData.InstructorId,
+                        Modality = courseData.Modality,
+                        IncludedMaterials = courseData.IncludedMaterials,
+                        Certification = courseData.Certification,
+                        AvailableSeats = courseData.AvailableSeats,
+                        Location = courseData.Location,
+                        Category = courseData.Category
+                    };
+                }
             }
 
             return result;
