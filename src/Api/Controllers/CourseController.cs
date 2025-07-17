@@ -118,5 +118,21 @@ namespace LearnHub.Back.Api.Controllers
             await _mediator.Send(new DeleteCourseCommand { Id = id });
             return NoContent();
         }
+
+        /// <summary>
+        /// Gets course statistics including the most demanded course and total enrollment count
+        /// </summary>
+        /// <returns>Course statistics with most demanded course and total enrolled students</returns>
+        /// <response code="200">Returns course statistics</response>
+        [HttpGet("stats")]
+        [SwaggerOperation(
+            Summary = "Gets course statistics",
+            Description = "Retrieves the most demanded course and total number of enrolled students")]
+        [ProducesResponseType(typeof(CourseStatsDto), StatusCodes.Status200OK)]
+        public async Task<ActionResult<CourseStatsDto>> GetStats()
+        {
+            var result = await _mediator.Send(new GetCourseStatsQuery());
+            return Ok(result);
+        }
     }
 }

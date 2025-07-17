@@ -147,4 +147,24 @@ public class CourseControllerTests
         // Assert
         result.Should().BeOfType<NoContentResult>();
     }
+
+    [Test]
+    [AutoMoqData]
+    public async Task GetStats_ShouldReturnOkWithCourseStats(
+        CourseStatsDto courseStats,
+        [Frozen] Mock<IMediator> mediatorMock,
+        CourseController sut)
+    {
+        // Arrange
+        mediatorMock.Setup(x => x.Send(It.IsAny<GetCourseStatsQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(courseStats);
+
+        // Act
+        var result = await sut.GetStats();
+
+        // Assert
+        result.Result.Should().BeOfType<OkObjectResult>();
+        var okResult = result.Result as OkObjectResult;
+        okResult!.Value.Should().BeEquivalentTo(courseStats);
+    }
 }
