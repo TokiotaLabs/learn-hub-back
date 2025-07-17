@@ -26,7 +26,6 @@ namespace LearnHub.Back.Application.Handlers.Course
                 .ToListAsync(cancellationToken);
 
             return topCourses;
-            return _mapper.Map<List<CourseDemandDto>>(topCourses);
         }
     }
 }
